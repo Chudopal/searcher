@@ -155,9 +155,9 @@ class ActionInterface(ABC):
 
     def __init__(
         self, 
-        database_maanger: DatabaseManagerInterface
+        database_manager: DatabaseManagerInterface
     ):
-        self.database_manager = database_maanger
+        self.database_manager = database_manager
 
-    def execute(self, data):
+    def execute(self):
         """Main method for each action"""
