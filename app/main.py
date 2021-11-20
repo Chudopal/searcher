@@ -15,22 +15,13 @@ from sqlite3 import connect, Row
 # cur.close()
 # conn.close()
 
-
-
-
 #from infrastructure.quries import CreateWordQuery
-
 
 # cq = CreateWordQuery([
 #     {'label': "rhgjhkjh", 'weight': 12},
 #     {'weight': 14, 'label': 'wrghtumtyh'}]
 # ).build()
 # print(cq)
-
-
-
-
-
 
 
 # from infrastructure.quries import DeleteWordQuery
@@ -100,12 +91,22 @@ from sqlite3 import connect, Row
 # a = "qazxs[10], doeonc[1002], wpcmepcwm[12321][wcwe]!"
 # print(re.sub('\[[a-z. \d, A-Z]*\]|,|\.|!|:|#|', "", a))
 
-from infrastructure.web_scraping.wiki_scraper import WikiScrapper
+# from infrastructure.web_scraping.wiki_scraper import WikiScrapper
 
 
-tokens = WikiScrapper(
-        link="https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%BD%D0%B0%D0%B4%D0%B0"
-        ).execute()
-print(tokens)
-print(len(tokens))
-print(len(set(tokens)))
+# tokens = WikiScrapper(
+#         link="https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%BD%D0%B0%D0%B4%D0%B0"
+#         ).execute()
+# print(tokens)
+# print(len(tokens))
+# print(len(set(tokens)))
+
+from view.search_window import MainWindow
+
+MainWindow(links =[
+        "https://github.com/Chudopal/searcher",
+        "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%BD%D0%B0%D0%B4%D0%B0"
+    ]).apply()
+# MainWindow.add_links(
+    
+# )

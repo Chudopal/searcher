@@ -153,8 +153,11 @@ class ScrapperInterface(ABC):
 
 class ActionInterface(ABC):
 
-    def __init__(self):
-        pass
+    def __init__(
+        self, 
+        database_maanger: DatabaseManagerInterface
+    ):
+        self.database_manager = database_maanger
 
-    def execute(self):
+    def execute(self, data):
         """Main method for each action"""
