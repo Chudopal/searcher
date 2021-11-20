@@ -1,14 +1,10 @@
 import re
-import requests
-import pymorphy2
 from bs4 import BeautifulSoup
 
-from domain.interfaces import ScrapperInterface
+from infrastructure.web_scraping.web_scraper import WebScraper
 
-class WikiScrapper(ScrapperInterface):
 
-    def get_data(self):
-        self._raw_data = requests.get(self.link).text
+class WikiScrapper(WebScraper):
 
     def scrape(self):
         fragments  = BeautifulSoup(
@@ -26,10 +22,3 @@ class WikiScrapper(ScrapperInterface):
                 ))
             )
 
-    def tokenize(self):
-        morph = pymorphy2.MorphAnalyzer()
-        words = self._prepare_data.split()
-        self._tokens = [
-            morph.parse(token)[0].normal_form
-            for token in words
-        ]

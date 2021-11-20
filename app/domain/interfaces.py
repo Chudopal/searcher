@@ -145,7 +145,7 @@ class ScrapperInterface(ABC):
     @abstractmethod
     def scrape(self):
         """Prepares information
-        from row data."""
+        from raw data."""
 
     @abstractmethod
     def tokenize(self):
