@@ -80,21 +80,32 @@ from sqlite3 import connect, Row
 
 
 
-from infrastructure.database.query_creator import QueryCreator
-from infrastructure.database.model_database_mapper import WordMapper
-from infrastructure.database.database_manager import DatabaseManager
-from infrastructure.database.database_connection import DatabaseConnection
+# from bs4 import BeautifulSoup
+# import requests
 
-from domain.models import Word
+# url = 'https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%BD%D0%B0%D0%B4%D0%B0'
 
-mapper = {Word: WordMapper}
+# page = requests.get(url)
 
-qc = QueryCreator(mapper)
+# print(page)
 
-dbc = DatabaseConnection('db.db')
+# soup = BeautifulSoup(page.text, "html.parser")
 
-dbm = DatabaseManager(database_connection=dbc, query_creator=qc)
+# items  = " ".join( [item.text for item in soup.find(id='bodyContent').find_all('p')])
 
-#dbm.create(Word, [{"label":"qwd11", "weight":16}, {"label":"qwdasd11", "weight":20}])
-print(dbm.get(Word, weight=16))
 
+# import re
+# print(re.sub("\[[\d, \w]*\]|,|\.|!|:|#|'|\(|\)|\n|\[|\]", "", items))
+
+# a = "qazxs[10], doeonc[1002], wpcmepcwm[12321][wcwe]!"
+# print(re.sub('\[[a-z. \d, A-Z]*\]|,|\.|!|:|#|', "", a))
+
+from infrastructure.web_scraping.wiki_scraper import WikiScrapper
+
+
+tokens = WikiScrapper(
+        link="https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%BD%D0%B0%D0%B4%D0%B0"
+        ).execute()
+print(tokens)
+print(len(tokens))
+print(len(set(tokens)))

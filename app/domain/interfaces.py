@@ -127,7 +127,7 @@ class ScrapperInterface(ABC):
 
     def __init__(self, link: str) -> None:
         self.link = link
-        self._row_data: str
+        self._raw_data: str
         self._prepare_data: str
         self._tokens: List[str]
 
