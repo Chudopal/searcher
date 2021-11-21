@@ -1,5 +1,6 @@
 from math import log
 from typing import List
+from app.infrastructure.database.model_database_mapper import WordDocumentAssotiationMapper
 
 from domain.models import Document
 from domain.models import WordDocumentAssotiation
@@ -29,32 +30,58 @@ class AddAction(ActionInterface):
 
     def execute(self):
         self.get_tokens()
-        self.get_data()
-        self.calculate_inverse_frequency()
-        self.calculate_word_weight()
+        self.process_tokens()
 
     def get_tokens(self):
         self.tokens = self.scraper_creator\
             .get_tokens(self.link)
 
-    def save_new_data(self):
+    def process_tokens(self):
+        self.get_documents_number()
+        for token in self.tokens:
+            documents_number_with_word =\
+                self.get_documents_number_with_token(token)
+            weight = self.calculate_weight(
+                documents_number_with_word=documents_number_with_word
+            )
+            word_documant_frequency =\
+                self.calculate_word_documant_frequency(token)
+            coefficient = self.calculate_coefficient(
+                frequency=word_documant_frequency,
+                weight=weight
+            )
+
+    def save_data(self):
         pass
 
     def get_documents_number(self):
-        self.documents_number = self.database_manager.count(Document)
+        self.documents_number =\
+            self.database_manager.count(Document)
 
-    def get_documents_number_with_word(self, word_label):
-        self.documents_number_with_word =\
-            self.database_manager.count(
-                WordDocumentAssotiation, label=word_label
-            )
+    def get_documents_number_with_token(
+        self, word_label
+    ) -> int:
+        return self.database_manager.count(
+            WordDocumentAssotiationMapper,
+            label=word_label
+        )
 
-    def calculate_inverse_frequency(self):
-        self.inverse_frequency = log(
+    def calculate_weight(
+        self, documents_number_with_word: int
+    ) -> float:
+        return log(
             (self.documents_number/
-                self.documents_number_with_word),
+                documents_number_with_word),
             10
         )
+
+    def calculate_word_documant_frequency(self, word) -> int:
+        return self.tokens.count(word)
+
+    def calculate_coefficient(
+        self, frequency: int, weight: float
+    ) -> float:
+        return frequency * weight
 
     def calculate_word_weight(self):
         pass
