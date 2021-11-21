@@ -7,7 +7,10 @@ from infrastructure.database.queries import (
     UpdateWordQuery,
     GetDocumentQuery,
     GetWordQuery,
-#    GetWordDocumentAssotiationQuery,
+    GetWordDocumentAssotiationQuery,
+    CountDocumentQuery,
+    CountWordDocumentAssotiationQuery,
+    CountWordQuery,
     DeleteDocumentQuery,
     DeleteWordQuery,
 )
@@ -27,6 +30,9 @@ class WordMapper(ModelMapperInterface):
     def delete(self, **where_params) -> str:
         return DeleteWordQuery(**where_params).build()
 
+    def count(self, **where_params) -> str:
+        return CountWordQuery(**where_params).build()
+
 
 class DocumentMapper(ModelMapperInterface):
 
@@ -42,5 +48,20 @@ class DocumentMapper(ModelMapperInterface):
     def delete(self, **where_params) -> str:
         return DeleteDocumentQuery(**where_params).build()
 
+    def count(self, **where_params) -> str:
+        return CountDocumentQuery(**where_params).build()
+
+
 class WordDocumentAssotiationMapper(ModelMapperInterface):
-    pass
+
+    def get(self, **where_params) -> str:
+        return GetWordDocumentAssotiationQuery(**where_params).build()
+
+    def update(self, data: Dict, **where_params) -> str:
+        return super().update(data, **where_params)
+
+    def create(self, data: List[Dict]) -> str:
+        return super().create(data)
+
+    def count(self, **where_params) -> str:
+        return CountWordDocumentAssotiationQuery(**where_params).build()

@@ -47,6 +47,16 @@ class DatabaseManager(DatabaseManagerInterface):
         )
         self._execute(query)
 
+    def count(self, model: type, **where_params) -> int:
+        self.database_connection.connect()
+        query = self.query_creator.count_query(
+            model, **where_params
+        )
+        self.database_connection.execute(query)
+        result = self.database_connection.get()[0]
+        self.database_connection.close()
+        return result
+
     def _execute(self, query):
         self.database_connection.execute(query)
         self.database_connection.commit()

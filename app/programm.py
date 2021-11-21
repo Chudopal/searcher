@@ -21,6 +21,7 @@ class Programm():
             database_connection=self.database_connection,
             query_creator=self.query_creator
         )
+        self.database_connection.migrate()
         self.scraper_creator = ScraperCreator()
         self.core = Core(
             database_manager=self.database_manager,

@@ -1,4 +1,10 @@
-from domain.interfaces import ActionInterface, ScrapperInterface
+from math import log
+from typing import List
+
+from domain.models import Document
+from domain.models import WordDocumentAssotiation
+
+from domain.interfaces import ActionInterface
 from domain.interfaces import DatabaseManagerInterface
 from domain.interfaces import ScraperFactory
 
@@ -16,6 +22,39 @@ class AddAction(ActionInterface):
         )
         self.scraper_creator = scraper_creator
         self.link = link
+        self.tokens: List[str]
+        self.inverse_frequency: float
+        self.documents_number: int
+        self.documents_number_with_word: int
 
     def execute(self):
-        print(self.scraper_creator.get_tokens(self.link))
+        self.get_tokens()
+        self.get_data()
+        self.calculate_inverse_frequency()
+        self.calculate_word_weight()
+
+    def get_tokens(self):
+        self.tokens = self.scraper_creator\
+            .get_tokens(self.link)
+
+    def save_new_data(self):
+        pass
+
+    def get_documents_number(self):
+        self.documents_number = self.database_manager.count(Document)
+
+    def get_documents_number_with_word(self, word_label):
+        self.documents_number_with_word =\
+            self.database_manager.count(
+                WordDocumentAssotiation, label=word_label
+            )
+
+    def calculate_inverse_frequency(self):
+        self.inverse_frequency = log(
+            (self.documents_number/
+                self.documents_number_with_word),
+            10
+        )
+
+    def calculate_word_weight(self):
+        pass

@@ -27,7 +27,7 @@ class DatabaseConnectionInterface(ABC):
 
     @abstractmethod
     def get(self) -> List:
-        """Returns all values form query."""
+        """Returns all values from query."""
 
     @abstractmethod
     def execute(self, query: str, params: Tuple) -> Dict[str, any]:
@@ -64,20 +64,24 @@ class QueryInterface(ABC):
 class QueryFactory(ABC):
 
     @abstractmethod
-    def create_query(self) -> QueryInterface:
+    def create_query(self) -> str:
         """Return query for updating special sctructure."""
 
     @abstractmethod
-    def get_query(self) -> QueryInterface:
+    def get_query(self) -> str:
         """Return query fot getting sepcial structure."""
 
     @abstractmethod
-    def update_query(self) -> QueryInterface:
+    def update_query(self) -> str:
         """Return query for updating special structure."""
 
     @abstractmethod
-    def delete_query(self) -> QueryInterface:
+    def delete_query(self) -> str:
         """Return query for deleting special structure."""
+
+    @abstractmethod
+    def count_query(self) -> str:
+        """Return query for counting special structure."""
 
 
 class DatabaseManagerInterface(ABC):
@@ -104,7 +108,11 @@ class DatabaseManagerInterface(ABC):
 
     @abstractmethod
     def delete(self, model: type, **where_params) -> None:
-        "Delete entities from database."
+        """Delete entities from database."""
+
+    @abstractmethod
+    def count(self, model: type, **where_params) -> int:
+        """Counts entities in database"""
 
 
 class ModelMapperInterface(ABC):
@@ -124,6 +132,9 @@ class ModelMapperInterface(ABC):
     @abstractmethod
     def delete(self, **where_params) -> str:
         """Returns delete query."""
+
+    def count(self, **where_params) -> str:
+        """Counts entities by criteria."""
 
 
 class ScrapperInterface(ABC):

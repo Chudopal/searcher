@@ -38,3 +38,4 @@ class Document(Model):
 class WordDocumentAssotiation(Model):
     word: Word
     document: Document
+    coefficient: int

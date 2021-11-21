@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS document(
 CREATE TABLE IF NOT EXISTS word_document_assotiation(
     document_id INTEGER NOT NULL,
     word_id INTEGER NOT NULL,
+    coefficient INTEGER NOT NULL,
     FOREIGN KEY(document_id)
         REFERENCES document(id)
         ON DELETE CASCADE,

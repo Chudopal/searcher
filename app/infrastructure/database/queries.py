@@ -119,3 +119,23 @@ class DeleteDocumentQuery(ConditionalQuery):
 
     def create_base(self) -> None:
         self._query = "DELETE FROM document"
+
+
+class CountWordDocumentAssotiationQuery(ConditionalQuery):
+
+    def create_base(self) -> None:
+        self._query = """
+            SELECT count(*) from word_document_acssotiation
+            JOIN word ON word_id=id
+        """
+
+
+class CountWordQuery(ConditionalQuery):
+
+    def create_base(self) -> None:
+        self._query = "SELECT count(*) from word"
+
+class CountDocumentQuery(ConditionalQuery):
+
+    def create_base(self) -> None:
+        self._query = "SELECT count(*) from document"

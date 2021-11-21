@@ -51,3 +51,8 @@ class QueryCreator(QueryFactory):
         return self.table_names_mapper.get(
             model
         )().delete(**where_params)
+
+    def count_query(self, model: type, **where_params) -> str:
+        return self.table_names_mapper.get(
+            model
+        )().count(**where_params)
