@@ -64,23 +64,23 @@ class QueryInterface(ABC):
 class QueryFactory(ABC):
 
     @abstractmethod
-    def create_query(self) -> str:
+    def create_query(self, model: type, data: List[Dict]) -> str:
         """Return query for updating special sctructure."""
 
     @abstractmethod
-    def get_query(self) -> str:
+    def get_query(self, model: type, **where_params) -> str:
         """Return query fot getting sepcial structure."""
 
     @abstractmethod
-    def update_query(self) -> str:
+    def update_query(self, model: type, data: Dict, **where_params) -> str:
         """Return query for updating special structure."""
 
     @abstractmethod
-    def delete_query(self) -> str:
+    def delete_query(self, model: type, **where_params) -> str:
         """Return query for deleting special structure."""
 
     @abstractmethod
-    def count_query(self) -> str:
+    def count_query(self, model: type, **where_params) -> str:
         """Return query for counting special structure."""
 
 
