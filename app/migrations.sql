@@ -19,5 +19,6 @@ CREATE TABLE IF NOT EXISTS word_document_assotiation(
         ON DELETE CASCADE,
     FOREIGN KEY(word_id)
         REFERENCES word(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    PRIMARY KEY (word_id, document_id)
 );

@@ -101,13 +101,29 @@ class CreateWordQuery(CreateBaseQuery):
 
 class CreateWordDocumentAssotiationQuery(CreateBaseQuery):
 
-    def append_params(self) -> None:
-        self.order = ['document_id', 'word_id', 'coefficient']
-        self._query = f""" INSERT INTO
-            word_document_assotiation({', '.join(self.order)}) VALUES """
+    def create_base(self) -> None:
+        self.conflict_fields = ['document_id', 'word_id']
+        self._query = """
+            INSERT INTO
+            word_document_assotiation(word_id, document_id, coefficient)
+            VALUES
+        """
 
-    def add_query_end(self) -> None:
-        self._query += " ;"
+    def append_params(self) -> None:
+        self._query += ", ".join([
+            """((SELECT id FROM word WHERE label={}),
+                (SELECT id FROM document WHERE link={}),
+                {}
+            )""".format(
+                    f"{item.get('label')!r}",
+                    f"{item.get('link')!r}",
+                    item.get('coefficient')
+                ) for item in self.data
+        ])
+
+    def initialize_update(self):
+        self._query += """ UPDATE SET """
+        self._query += "coefficient=excluded.coefficient"
 
 class GetDocumentQuery(ConditionalQuery):
 
@@ -119,7 +135,8 @@ class GetWordDocumentAssotiationQuery(ConditionalQuery):
 
     def create_base(self) -> None:
         self._query = """
-            SELECT label as label, weight as weight, link as link
+            SELECT label as label, weight as weight, link as link,
+            coefficient as coefficient
             FROM word join word_document_assotiation
             ON word.id = word_document_assotiation.word_id
             JOIN document ON

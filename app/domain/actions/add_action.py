@@ -21,13 +21,13 @@ class AddAction(ActionInterface):
         super().__init__(
             database_manager=database_manager
         )
-        self.scraper_creator = scraper_creator
-        self.link = link
+        self.link: str = link
         self.tokens: List[str]
-        self.words: List[Dict] = list()
-        self.inverse_frequency: float
         self.documents_number: int
+        self.words: List[Dict] = list()
         self.documents_number_with_word: int
+        self.assotiations: List[Dict] = list()
+        self.scraper_creator: ScraperFactory = scraper_creator
 
     def execute(self):
         self.save_document()
@@ -51,21 +51,30 @@ class AddAction(ActionInterface):
             weight = self.calculate_weight(
                 documents_number_with_word=documents_number_with_word
             )
-            self.words.append(
-                {'label': token, 'weight': weight}
-            )
             word_documant_frequency =\
                 self.calculate_word_documant_frequency(token)
             coefficient = self.calculate_coefficient(
                 frequency=word_documant_frequency,
                 weight=weight
             )
+            self.words.append(
+                {'label': token, 'weight': weight}
+            )
+            self.assotiations.append({
+                    'label': token,
+                    'coefficient': coefficient,
+                    'link': self.link
+            })
         self.save_data()
 
     def save_data(self):
         self.database_manager.create(
             Word,
             self.words
+        )
+        self.database_manager.create(
+            WordDocumentAssotiation,
+            self.assotiations
         )
 
     def get_documents_number(self):
