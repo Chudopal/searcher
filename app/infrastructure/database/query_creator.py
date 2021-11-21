@@ -1,10 +1,11 @@
 from typing import Dict, List
 from domain.interfaces import QueryFactory
+from domain.interfaces import QueryInterface
 
 
 class QueryCreator(QueryFactory):
 
-    table_names_mapper: Dict[type, str] = dict()
+    table_names_mapper: Dict[type, type] = dict()
 
     def __init__(self, model_mapper: Dict):
         self.table_names_mapper.update(model_mapper)

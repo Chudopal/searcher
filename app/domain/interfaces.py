@@ -33,6 +33,9 @@ class DatabaseConnectionInterface(ABC):
     def execute(self, query: str, params: Tuple) -> Dict[str, any]:
         """Execute queries"""
 
+    @abstractmethod
+    def migrate(self):
+        "Apply migrations for databasse."
 
 class QueryInterface(ABC):
 

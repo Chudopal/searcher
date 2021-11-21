@@ -101,12 +101,38 @@ from sqlite3 import connect, Row
 # print(len(tokens))
 # print(len(set(tokens)))
 
-from view.search_window import MainWindow
+# from view.search_window import SearchWindow
+# from domain.actions import Core
 
-MainWindow(links =[
-        "https://github.com/Chudopal/searcher",
-        "https://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D0%BD%D0%B0%D0%B4%D0%B0"
-    ]).apply()
+# core = Core(database_manager=None)
+
+# SearchWindow(core).apply()
 # MainWindow.add_links(
     
 # )
+
+# from infrastructure.database.database_connection import DatabaseConnection
+
+# dbc = DatabaseConnection(
+#     "app/db.db",
+#     "app/migrations.sql"
+# ).migrate()
+
+# import argparse
+
+
+from programm import Programm
+
+database = "app/db.db"
+migration = "app/migrations.sql"
+
+def main():
+    programm = Programm(
+        database=database,
+        migration=migration
+    )
+    programm.process()
+
+
+if __name__ == "__main__":
+    main()

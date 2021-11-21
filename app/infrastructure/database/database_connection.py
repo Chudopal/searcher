@@ -31,6 +31,11 @@ class DatabaseConnection(DatabaseConnectionInterface):
     def execute(self, query: str):
         self.cursor.execute(query)
 
+    def migrate(self):
+        with open(self.migration) as sql_file:
+            self.cursor.executescript(sql_file.read())
+        self.close()
+
     @property
     def cursor(self) -> Cursor:
         if not self._cursor:

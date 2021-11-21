@@ -14,3 +14,7 @@ class SearchAction(ActionInterface):
 
     def execute(self):
         print(self.request)
+        return [
+            "https://www.tutorialspoint.com/python/tk_colors.htm",
+            "https://github.com/github/gitignore/blob/master/Python.gitignore"
+        ]

@@ -4,15 +4,12 @@ import tkinter as tk
 from domain.actions import Core
 
 
-class MainWindow():
+class SearchWindow():
     def __init__(
         self,
-        links,
-        core: Core=None
+        core: Core
     ):
-        self.links_titles = links
         self.core = core
-        self.links_items: List = links
         self.links: List = list()
         self.initialize()
 
@@ -65,7 +62,7 @@ class MainWindow():
         search_string = self.entry.get()
         self.entry.delete(0, tk.END)
         if search_string:
-            self.links_titles = self.core.search_action(
+            self.links_items = self.core.search_action(
                 search_string
             )
             self.add_links()
