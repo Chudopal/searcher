@@ -21,14 +21,7 @@ class Programm():
         self.database_connection = DatabaseConnection(
             database=database, migration=migration
         )
-        self.model_mapper = {
-            Word: WordMapper,
-            Document: DocumentMapper,
-            WordDocumentAssotiation: "",
-        }
-        self.query_creator = QueryCreator(
-            model_mapper=self.model_mapper
-        )
+        self.query_creator = QueryCreator()
         self.database_connection = DatabaseManager(
             database_connection=self.database_connection,
             query_creator=self.query_creator

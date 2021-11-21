@@ -154,6 +154,13 @@ class ScrapperInterface(ABC):
     def tokenize(self):
         """Create tokens from prepare data."""
 
+
+class ScraperFactory(ABC):
+
+    def get_scraper(self):
+        pass
+
+
 class ActionInterface(ABC):
 
     def __init__(

@@ -41,3 +41,6 @@ class DocumentMapper(ModelMapperInterface):
 
     def delete(self, **where_params) -> str:
         return DeleteDocumentQuery(**where_params).build()
+
+class WordDocumentAssotiationMapper(ModelMapperInterface):
+    pass
