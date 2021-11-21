@@ -157,9 +157,26 @@ class ScrapperInterface(ABC):
 
 class ScraperFactory(ABC):
 
-    def get_scraper(self):
-        pass
+    def __init__(self):
+        self.tokens: List[str]
+        self.domain: str
+        self.domain_scrapper_mapper: Dict[
+            str, ScrapperInterface]
 
+    def get_tokens(self, link: str) -> List[str]:
+        self.link = link
+        self.analyze_request()
+        self.create_tokens()
+        return self.tokens
+
+    @abstractmethod
+    def analyze_request(self):
+        """Alinalization of link and
+        mapping with existing scraper."""
+
+    def create_tokens(self):
+        self.tokens = self.domain_scrapper_mapper\
+            .get(self.domain)(self.link).execute()
 
 class ActionInterface(ABC):
 
