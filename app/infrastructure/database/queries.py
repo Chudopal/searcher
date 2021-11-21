@@ -50,7 +50,8 @@ class CreateBaseQuery(QueryInterface):
 
     def __init__(self, data: List[Dict]):
         self.data = data
-        self.order = list()
+        self.order: List[str] = list()
+        self.conflict_fields: List[str] = list()
 
     def append_params(self) -> None:
         self._query += ",".join([
@@ -61,12 +62,27 @@ class CreateBaseQuery(QueryInterface):
         ])
 
     def add_query_end(self) -> None:
-        self._query += ";"
+        self._query += f"""
+            ON CONFLICT({", ".join(
+                [str(field) for field
+                in self.conflict_fields]
+            )}) DO
+        """
+        self.initialize_update()
+        self._query += " ;"
+
+    def initialize_update(self):
+        self._query += """ UPDATE SET """
+        self._query += " ,".join([
+            "{}=excluded.{}".format(key, key)
+            for key in self.data[0].keys()
+        ])
 
 
 class CreateDocumentQuery(CreateBaseQuery):
 
     def create_base(self) -> None:
+        self.conflict_fields = ['link']
         self.order = ['link']
         self._query = f"""
             INSERT INTO 
@@ -77,6 +93,7 @@ class CreateDocumentQuery(CreateBaseQuery):
 class CreateWordQuery(CreateBaseQuery):
 
     def create_base(self) -> None:
+        self.conflict_fields = ['label']
         self.order = ['label', 'weight']
         self._query = f"""INSERT INTO 
             word({', '.join(self.order)}) VALUES """
@@ -89,6 +106,8 @@ class CreateWordDocumentAssotiationQuery(CreateBaseQuery):
         self._query = f""" INSERT INTO
             word_document_assotiation({', '.join(self.order)}) VALUES """
 
+    def add_query_end(self) -> None:
+        self._query += " ;"
 
 class GetDocumentQuery(ConditionalQuery):
 
@@ -124,6 +143,7 @@ class UpdateWordQuery(UpdateBaseQuery):
                 ),
             ])
 
+
 class UpdateDocumentQuery(UpdateBaseQuery):
 
     def create_base(self) -> None:
@@ -147,6 +167,11 @@ class DeleteDocumentQuery(ConditionalQuery):
     def create_base(self) -> None:
         self._query = "DELETE FROM document "
 
+
+class DeleteWordDocumentAssotiationQuery(ConditionalQuery):
+
+    def create_base(self) -> None:
+        self._query = "DELETE FROM word_document_assotiation "
 
 class CountWordDocumentAssotiationQuery(ConditionalQuery):
 

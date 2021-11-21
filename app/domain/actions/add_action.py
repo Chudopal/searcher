@@ -1,7 +1,7 @@
 from math import log
-from typing import List
-from app.infrastructure.database.model_database_mapper import WordDocumentAssotiationMapper
+from typing import Dict, List
 
+from domain.models import Word
 from domain.models import Document
 from domain.models import WordDocumentAssotiation
 
@@ -24,13 +24,20 @@ class AddAction(ActionInterface):
         self.scraper_creator = scraper_creator
         self.link = link
         self.tokens: List[str]
+        self.words: List[Dict] = list()
         self.inverse_frequency: float
         self.documents_number: int
         self.documents_number_with_word: int
 
     def execute(self):
+        self.save_document()
         self.get_tokens()
         self.process_tokens()
+
+    def save_document(self):
+        self.database_manager.create(
+            Document, [{'link': self.link}]
+        )
 
     def get_tokens(self):
         self.tokens = self.scraper_creator\
@@ -44,15 +51,22 @@ class AddAction(ActionInterface):
             weight = self.calculate_weight(
                 documents_number_with_word=documents_number_with_word
             )
+            self.words.append(
+                {'label': token, 'weight': weight}
+            )
             word_documant_frequency =\
                 self.calculate_word_documant_frequency(token)
             coefficient = self.calculate_coefficient(
                 frequency=word_documant_frequency,
                 weight=weight
             )
+        self.save_data()
 
     def save_data(self):
-        pass
+        self.database_manager.create(
+            Word,
+            self.words
+        )
 
     def get_documents_number(self):
         self.documents_number =\
@@ -61,17 +75,17 @@ class AddAction(ActionInterface):
     def get_documents_number_with_token(
         self, word_label
     ) -> int:
-        return self.database_manager.count(
-            WordDocumentAssotiationMapper,
+        number = self.database_manager.count(
+            WordDocumentAssotiation,
             label=word_label
         )
+        return number if number else 1
 
     def calculate_weight(
         self, documents_number_with_word: int
     ) -> float:
         return log(
-            (self.documents_number/
-                documents_number_with_word),
+            self.documents_number/documents_number_with_word,
             10
         )
 

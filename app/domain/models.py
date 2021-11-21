@@ -38,6 +38,6 @@ class Document(Model):
 
 @dataclass
 class WordDocumentAssotiation(Model):
-    word_id: int
     document_id: int
     coefficient: float
+    word_id: int = None

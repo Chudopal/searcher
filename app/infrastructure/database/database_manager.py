@@ -30,11 +30,11 @@ class DatabaseManager(DatabaseManagerInterface):
         self._execute(query)
 
     def create(
-        self, model: type, data: List[Model]
+        self, model: type, data: List[Dict]
     ) -> None:
         self.database_connection.connect()
         query = self.query_creator.create_query(
-            model, [dict(data_item) for data_item in data]
+            model, data
         )
         self._execute(query)
 
@@ -53,7 +53,7 @@ class DatabaseManager(DatabaseManagerInterface):
             model, **where_params
         )
         self.database_connection.execute(query)
-        result = self.database_connection.get()[0]
+        result = list(self.database_connection.get()[0])[0]
         self.database_connection.close()
         return result
 
