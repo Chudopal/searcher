@@ -32,6 +32,9 @@ class UpdateBaseQuery(ConditionalQuery):
             for item, value
             in self.data.items()
         ])
+        self.create_condition()
+
+    def create_condition(self):
         super().append_params()
 
 
@@ -39,7 +42,7 @@ class GetWordQuery(ConditionalQuery):
 
     def create_base(self) -> None:
         self._query = """
-            SELECT label as label, weight as weight FROM word
+            SELECT id as id, label as label, weight as weight FROM word
         """
 
 
@@ -76,13 +79,21 @@ class CreateWordQuery(CreateBaseQuery):
     def create_base(self) -> None:
         self.order = ['label', 'weight']
         self._query = f"""INSERT INTO 
-            word({', '.join(self.order)}) VALUES"""
+            word({', '.join(self.order)}) VALUES """
+
+
+class CreateWordDocumentAssotiationQuery(CreateBaseQuery):
+
+    def append_params(self) -> None:
+        self.order = ['document_id', 'word_id', 'coefficient']
+        self._query = f""" INSERT INTO
+            word_document_assotiation({', '.join(self.order)}) VALUES """
 
 
 class GetDocumentQuery(ConditionalQuery):
 
     def create_base(self) -> None:
-        self._query = """SELECT link FRON document"""
+        self._query = """SELECT id as id, link as link FRON document"""
 
 
 class GetWordDocumentAssotiationQuery(ConditionalQuery):
@@ -102,6 +113,16 @@ class UpdateWordQuery(UpdateBaseQuery):
     def create_base(self) -> None:
         self._query = "UPDATE word SET "
 
+    def create_condition(self):
+        if self.where_params:
+            self._query += " WHERE " + " AND ".join([
+                "word_id IN (SELECT id FROM word WHERE label = {})".format(
+                    f'{self.where_params.get("label")!r}'
+                ),
+                "document_id IN (SELECT id FROM document WHERE link = {})".format(
+                    f'{self.where_params.get("link")!r}'
+                ),
+            ])
 
 class UpdateDocumentQuery(UpdateBaseQuery):
 
@@ -109,33 +130,41 @@ class UpdateDocumentQuery(UpdateBaseQuery):
         self._query = "UPDATE document SET "
 
 
+class UpdateWordDocumentAssotiationQuery(UpdateBaseQuery):
+
+    def create_base(self) -> None:
+        self._query = "UPDATE word_document_assotiation "
+
+
 class DeleteWordQuery(ConditionalQuery):
 
     def create_base(self) -> None:
-        self._query = "DELETE FROM word"
+        self._query = "DELETE FROM word "
 
 
 class DeleteDocumentQuery(ConditionalQuery):
 
     def create_base(self) -> None:
-        self._query = "DELETE FROM document"
+        self._query = "DELETE FROM document "
 
 
 class CountWordDocumentAssotiationQuery(ConditionalQuery):
 
     def create_base(self) -> None:
         self._query = """
-            SELECT count(*) from word_document_acssotiation
-            JOIN word ON word_id=id
+            SELECT count(*) from word_document_assotiation
+            JOIN word ON word_id=word.id
+            JOIN document ON document_id = document.id
         """
 
 
 class CountWordQuery(ConditionalQuery):
 
     def create_base(self) -> None:
-        self._query = "SELECT count(*) from word"
+        self._query = "SELECT count(*) from word "
+
 
 class CountDocumentQuery(ConditionalQuery):
 
     def create_base(self) -> None:
-        self._query = "SELECT count(*) from document"
+        self._query = "SELECT count(*) from document "

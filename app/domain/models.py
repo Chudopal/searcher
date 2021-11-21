@@ -9,8 +9,9 @@ class Model(ABC):
 
 @dataclass
 class Word(Model):
+    id: int
     label: str
-    weight: int
+    weight: float
 
     def __hash__(self) -> int:
         return hash(self.label)
@@ -24,6 +25,7 @@ class Word(Model):
 
 @dataclass
 class Document(Model):
+    id: int
     link: str
 
     def __hash__(self) -> int:
@@ -36,6 +38,6 @@ class Document(Model):
 
 @dataclass
 class WordDocumentAssotiation(Model):
-    word: Word
-    document: Document
-    coefficient: int
+    word_id: int
+    document_id: int
+    coefficient: float

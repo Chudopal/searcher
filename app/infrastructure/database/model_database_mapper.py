@@ -3,8 +3,10 @@ from domain.interfaces import ModelMapperInterface
 from infrastructure.database.queries import (
     CreateDocumentQuery,
     CreateWordQuery,
+    CreateWordDocumentAssotiationQuery,
     UpdateDocumentQuery,
     UpdateWordQuery,
+    UpdateWordDocumentAssotiationQuery,
     GetDocumentQuery,
     GetWordQuery,
     GetWordDocumentAssotiationQuery,
@@ -58,10 +60,10 @@ class WordDocumentAssotiationMapper(ModelMapperInterface):
         return GetWordDocumentAssotiationQuery(**where_params).build()
 
     def update(self, data: Dict, **where_params) -> str:
-        return super().update(data, **where_params)
+        return UpdateWordDocumentAssotiationQuery(data, **where_params).build()
 
     def create(self, data: List[Dict]) -> str:
-        return super().create(data)
+        return CreateWordDocumentAssotiationQuery(data).build()
 
     def count(self, **where_params) -> str:
         return CountWordDocumentAssotiationQuery(**where_params).build()
