@@ -18,7 +18,7 @@ class WikiScrapper(WebScraper):
             "\[[\d, \w]*\]|,|\.|!|:|#|'|\(|\)|\n|\[|\]",
             " ",
             " ".join((
-                    fragment.text for fragment in fragments
+                    fragment.text.lower() for fragment in fragments
                 ))
             )
 

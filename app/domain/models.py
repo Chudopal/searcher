@@ -9,7 +9,6 @@ class Model(ABC):
 
 @dataclass
 class Word(Model):
-    id: int
     label: str
     weight: float
 
@@ -22,10 +21,13 @@ class Word(Model):
             weight=self.weight
         )
 
+    @classmethod
+    def create(cls, label: str, weight: float):
+        return cls(label=label, weight=weight)
+
 
 @dataclass
 class Document(Model):
-    id: int
     link: str
 
     def __hash__(self) -> int:
@@ -36,8 +38,26 @@ class Document(Model):
             link=self.link
         )
 
+    @classmethod
+    def create(cls, link: str):
+        return cls(link=link)
+
 @dataclass
 class WordDocumentAssotiation(Model):
-    document_id: int
+    document: Document
     coefficient: float
-    word_id: int = None
+    word: Word
+
+    @classmethod
+    def create(
+        cls,
+        coefficient,
+        label: str,
+        weight: float,
+        link: str
+    ):
+        return cls(
+            word=Word(label=label, weight=weight),
+            document=Document(link=link),
+            coefficient=coefficient
+        )

@@ -77,7 +77,7 @@ class SearchWindow():
                 fg="blue"
             )
             label.bind(
-                    "<Button-1>",
+                    f"<Button-1>",
                     lambda e: self.callback(
                         link_item
                     )

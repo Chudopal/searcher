@@ -102,7 +102,7 @@ class CreateWordQuery(CreateBaseQuery):
 class CreateWordDocumentAssotiationQuery(CreateBaseQuery):
 
     def create_base(self) -> None:
-        self.conflict_fields = ['document_id', 'word_id']
+        self.conflict_fields = ['word_id', "document_id"]
         self._query = """
             INSERT INTO
             word_document_assotiation(word_id, document_id, coefficient)

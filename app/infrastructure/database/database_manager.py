@@ -65,5 +65,5 @@ class DatabaseManager(DatabaseManagerInterface):
     def _prepare_result(
         self, model: type, result: Dict
     ) -> List[Model]:
-        return [model(**row) for row in result]
+        return [model.create(**row) for row in result]
 
