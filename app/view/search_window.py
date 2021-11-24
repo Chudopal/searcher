@@ -56,7 +56,6 @@ class SearchWindow():
         if link_item:
             self.core.add_action(link_item)
 
-
     def execute_search(self):
         self.delete_elements(self.links)
         search_string = self.entry.get()
@@ -67,23 +66,23 @@ class SearchWindow():
             )
             self.add_links()
 
-    def callback(self, url):
-        webbrowser.open_new(url)
+    def callback_creator(self, url):
+        serch_url = url
+        def callback():
+            webbrowser.open_new(serch_url)
+        return callback
 
     def add_links(self):
         for link_item in self.links_items:
-            label = tk.Label(
-                text=link_item,
-                fg="blue"
+            button = tk.Button(
+                text=link_item[0:40] + "...",
+                fg="blue",
+                command=self.callback_creator(
+                    link_item
+                )
             )
-            label.bind(
-                    f"<Button-1>",
-                    lambda e: self.callback(
-                        link_item
-                    )
-            )
-            label.pack()
-            self.links.append(label)
+            button.pack()
+            self.links.append(button)
 
     def delete_elements(self, elements):
         for element in elements:
